@@ -5,7 +5,8 @@ options {
 withAWS(profile:'default', region:'ap-south-1', credentials:'AWS_Personal')
 }
 
-
+def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
+            env.Path = "${tfHome};${env.Path}"
 
 stages {
 stage('checkout') {
@@ -15,9 +16,6 @@ checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRe
 }
 stage ("terraform init") {
 steps {
-def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-            env.Path = "${tfHome};${env.Path}"
-            bat 'terraform --version'
 bat ('terraform init')
 }
 }
