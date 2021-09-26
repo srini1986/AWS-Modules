@@ -15,6 +15,9 @@ checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRe
 }
 stage ("terraform init") {
 steps {
+def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
+            env.Path = "${tfHome};${env.Path}"
+            bat 'terraform --version'
 bat ('terraform init')
 }
 }
