@@ -1,38 +1,72 @@
-pipeline {
-agent any
+pipeline {​​​​
 
-options {
-withAWS(profile:'default', region:'ap-south-1', credentials:'AWS_Personal')
-}
+    agent any
 
+    tools {​​​​
 
+        "org.jenkinsci.plugins.terraform.TerraformInstallation" "Terraform-Jenkins"
 
-stages {
-stage('checkout') {
-steps {
-checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/srini1986/AWS-Modules.git']]])
-}
-}
-stage ("terraform init") {
-steps {
-bat ('terraform init')
-}
-}
+    }​​​​
 
-stage ("terraform fmt") {
-steps {
-bat ('terraform fmt')
-}
-}
-stage ("terraform validate") {
-steps {
-bat ('terraform validate')
-}
-}
-stage ("terraform apply") {
-steps {
-bat ('terraform apply --auto-approve')
-}
-}
-}
-}
+    options {​​​​
+
+        withAWS(profile:'default', region:'ap-south-1', credentials:'AWS_Personal')
+
+        }​​​​
+
+    stages {​​​​
+
+        stage('checkout') {​​​​
+
+            steps {​​​​
+
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/srini1986/AWS-Modules.git']]])
+
+            }​​​​
+
+            }​​​​
+
+        stage ("terraform init") {​​​​
+
+            steps {​​​​
+
+                sh "terraform init -input=false"
+
+                }​​​​
+
+                }​​​​ 
+
+        stage ("terraform fmt") {​​​​
+
+            steps {​​​​
+
+                sh "terraform fmt -input=false"
+
+                }​​​​
+
+                }​​​​
+
+        stage ("terraform validate") {​​​​
+
+            steps {​​​​
+
+                sh "terraform plan -out tfplan"
+
+                }​​​​
+
+                }​​​​
+
+        stage ("terraform apply") {​​​​
+
+            steps {​​​​
+
+                sh "terraform apply tfplan"
+
+            }​​​​
+
+            }​​​​
+
+        }​​​​
+
+}​​​​
+
