@@ -1,4 +1,3 @@
-[17:05] Mayank Pathak (TMNA)
 pipeline {​​​​
 
     agent any
